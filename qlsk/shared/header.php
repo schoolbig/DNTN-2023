@@ -375,7 +375,7 @@ if (!isset($_SESSION['loggedin']) || $_SESSION['loggedin'] !== true) {
                             </a>
                         </li><!-- .nk-menu-item -->
                         <li class="nk-menu-item">
-                            <a href="analytics.html" class="nk-menu-link">
+                            <a href="analytics.php" class="nk-menu-link">
                                 <span class="nk-menu-icon"><em class="icon ni ni-speed"></em></span>
                                 <span class="nk-menu-text">Thống kê</span>
                             </a>

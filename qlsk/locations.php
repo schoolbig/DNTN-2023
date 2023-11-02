@@ -1,6 +1,7 @@
 <?php include 'shared/header.php' ?>
     <style>
         #map { height: 500px; }
+        #map1 { height: 350px; }
     </style>
     <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.3/dist/leaflet.css"
           integrity="sha256-kLaT2GOSpHechhsozzB+flnD+zUyjE2LlfWPgU04xyI="
@@ -91,7 +92,14 @@
                                                                     <a href="#" class="dropdown-toggle btn btn-icon btn-trigger" data-bs-toggle="dropdown"><em class="icon ni ni-more-h"></em></a>
                                                                     <div class="dropdown-menu dropdown-menu-end">
                                                                         <ul class="link-list-opt no-bdr">
-                                                                            <li><a href="category_detail.php?id=<?php echo $row['MaDiaDiem'] ?>"><em class="icon ni ni-focus"></em><span>Xem chi tiết</span></a></li>
+                                                                            <li><a onclick="showLocationDetails(
+                                                                                <?php echo $row['MaDiaDiem']; ?>,
+                                                                                        '<?php echo $row['TenDiaDiem']; ?>',
+                                                                                        '<?php echo $row['KinhDo']; ?>',
+                                                                                        '<?php echo $row['ViDo']; ?>',
+                                                                                        '<?php echo $row['MoTa']; ?>',
+                                                                                <?php echo $row['TrangThai']; ?>
+                                                                                        )"><em class="icon ni ni-focus"></em><span>Xem chi tiết</span></a></li>
                                                                             <li class="divider"></li>
                                                                             <li><a onclick="delete_location(<?php echo $row['MaDiaDiem'] ?>)"><em class="icon ni ni-delete"></em><span>Xóa</span></a></li>
 
@@ -225,82 +233,124 @@
         </div>
     </div>
     <!-- content @e -->
-
+    <div class="modal fade" role="dialog" id="modalLocationDetails">
+        <div class="modal-dialog modal-dialog-centered modal-lg" role="document">
+            <div class="modal-content">
+                <a href="#" class="close" data-bs-dismiss="modal"><em class="icon ni ni-cross-sm"></em></a>
+                <div class="modal-body modal-body-lg">
+                    <h5 class="title">Chi tiết địa điểm</h5>
+                    <div class="row gy-4">
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label class="form-label" for="locationName">Tên địa điểm</label>
+                                <input  type="text" class="form-control form-control-lg" hidden id="locationID">
+                                <input  type="text" class="form-control form-control-lg" id="locationName">
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label class="form-label" for="locationStatus">Trạng thái</label>
+                                <select id="locationStatus" class="form-control">
+                                    <option value="1">Hoạt động</option>
+                                    <option value="0">Ngưng hoạt động</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="col-md-12">
+                            <div id="map1">
+                                <div class="modal-body" id="map-canvas1"></div>
+                            </div>
+                        </div><!-- col -->
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label class="form-label" for="longitude">Kinh độ</label>
+                                <input readonly type="text" class="form-control form-control-lg" id="locationLongitude">
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label class="form-label" for="latitude">Vĩ độ</label>
+                                <input readonly type="text" class="form-control form-control-lg" id="locationLatitude">
+                            </div>
+                        </div>
+                        <div class="col-md-12">
+                            <div class="form-group">
+                                <label class="form-label" for="locationDesc">Mô tả</label>
+                                <textarea  class="form-control form-control-lg" id="locationDesc"></textarea>
+                            </div>
+                        </div>
+                        <div class="col-12">
+                            <ul class="align-center flex-wrap flex-sm-nowrap gx-4 gy-2">
+                                <li>
+                                    <a href="#" class="btn btn-lg btn-primary" onclick="updateLocation()">Cập nhật địa điểm</a>
+                                </li>
+                                <li>
+                                    <a href="#" data-bs-dismiss="modal" class="btn btn-lg btn-primary">Đóng</a>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+                </div><!-- .modal-body -->
+            </div><!-- .modal-content -->
+        </div><!-- .modal-dialog -->
+    </div><!-- .modal -->
     <script>
-        // $(document).ready(function() {
-        //     // Lắng nghe sự kiện mở modal
-        //     $('#modalForm').on('show.bs.modal', function (event) {
-        //         $('#btn_add').show();
-        //         $('#cate-title').text("Thêm loại món ăn");
-        //         $('#btn_update').hide();
-        //         $('#cate-status').hide();
-        //         $(this).find('input, textarea, select').val('');
-        //     });
-        // });
-        // function view(id) {
-        //     $.ajax({
-        //         type: 'GET',
-        //         url: 'core//' + id,
-        //         dataType: "json",
-        //         success: function (response) {
-        //             console.log(response);
-        //             if (response.error == false) {
-        //                 $('#modalForm').modal('show');
-        //                 $('#cate-title').text("Thông tin loại món ăn");
-        //                 $('#btn_add').hide();
-        //    //                 $('#btn_update').show();
-        //    //                 $('#cate-status').show();
-        //    //                 $('#cate-id').val(response.data.MaLoai);
-        //                 $('#full-name').val(response.data.TenLoai);
-        //                 $('#cate-desc').val(response.data.MoTa);
-        //                 $('#cate-status-op').val(response.data.TrangThai);
-        //             }
-        //             else {
-        //                 alert(response.message)
-        //             }
-        //
-        //         },
-        //         error: function (error) {
-        //             alert('Đã có lỗi xảy ra. Vui lòng thử lại.'); // Hiển thị thông báo lỗi
-        //         }
-        //     });
-        // }
-        // function update_cate() {
-        //     $("#cate-form").validate();            // <- INITIALIZES PLUGIN
-        //     if ($("#cate-form").valid()) {
-        //         event.preventDefault();
-        //         var formData = new FormData($('#cate-form')[0]);
-        //         var id = $('#cate-id').val();
-        //         $.ajax({
-        //             type: 'POST',
-        //             url: '/update_cate_api/' + id,
-        //             data: formData,
-        //             contentType: false,
-        //             processData: false,
-        //             success: function (response) {
-        //                 if (response.error == false) {
-        //                     Swal.fire(
-        //                         'Thành công!',
-        //                         'Loại món ăn đã được cập nhật thành công!',
-        //                         'success',
-        //                     );
-        //                     window.location = "categories"
-        //
-        //                 }
-        //                 else {
-        //                     Swal.fire(
-        //                         'Thất bại!',
-        //                         'Đã có lỗi xảy ra: ' + response.message,
-        //                         'error'
-        //                     )
-        //                 }
-        //             },
-        //             error: function (error) {
-        //                 alert('Đã có lỗi xảy ra. Vui lòng thử lại.'); // Hiển thị thông báo lỗi
-        //             }
-        //         });
-        //     };
-        // }
+        function showLocationDetails(id, name, longitude, latitude, desc, status) {
+            $('#locationID').val(id);
+            $('#locationName').val(name);
+            $('#locationLongitude').val(longitude);
+            $('#locationLatitude').val(latitude);
+            $('#locationStatus').val(status);
+            $('#locationDesc').val(desc);
+
+            $('#modalLocationDetails').modal('show');
+        }
+        function updateLocation() {
+            var id = $('#locationID').val();
+            var name = $('#locationName').val();
+            var status = $('#locationStatus').val();
+            var longitude = $('#locationLongitude').val();
+            var latitude = $('#locationLatitude').val();
+            var description = $('#locationDesc').val();
+
+            // AJAX request to update location details
+            $.ajax({
+                url: 'core/functions/locations/update_location.php',
+                type: 'POST',
+                data: {
+                    id: id,
+                    name: name,
+                    status: status,
+                    longitude: longitude,
+                    latitude: latitude,
+                    description: description
+                },
+                success: function(response) {
+                    response = JSON.parse(response);
+                    if (response.error === false) {
+                        Swal.fire(
+                            'Thành công!',
+                            'Cập nhật địa điểm thành công!',
+                            'success',
+
+                        )
+                        window.location.reload();
+
+                    }
+                    else {
+                        Swal.fire(
+                            'Thất bại!',
+                            'Đã có lỗi xảy ra: ' + response.message,
+                            'error'
+                        )
+                    }
+                },
+                error: function(error) {
+                    // Handle the error
+                    console.error(error);
+                }
+            });
+        }
         $("#location-info-form").submit(function(event) {
             $("#location-info-form").validate();            // <- INITIALIZES PLUGIN
             if ($("#location-info-form").valid()) {
@@ -433,6 +483,50 @@
                 map.invalidateSize();
             }, 10);
         });
+
+
+        var popup1 = L.popup();
+
+        function onMapClick1(e) {
+            Swal.fire({
+                icon: 'info',
+                title: 'Xác nhận',
+                confirmButtonText: "Xác nhận",
+                cancelButtonText: "Chọn lại",
+                html: 'Xác nhận chọn lại vị trí của bạn<br>' +
+                    'Vĩ độ: ' +
+                    e.latlng.lat + '<br>Kinh độ: ' + e.latlng.lng,
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    $('#locationLatitude').val(e.latlng.lat);
+                    $('#locationLongitude').val(e.latlng.lng);
+
+                }
+            });
+
+        }
+
+        var map1 = L.map('map1').setView([10.990233169382483, 106.66372773931532], 13);
+
+        L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {
+            attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+        }).addTo(map1);
+
+        var marker1 = L.marker([10.990233169382483, 106.66372773931532]).addTo(map1);
+
+        let geoCoderOptions1 = {
+            collapsed: false,
+            geocoder: L.Control.Geocoder.nominatim({
+                geocodingQueryParams: {
+                    // List the country codes here
+                    countrycodes: 'vn'
+                }
+            })
+        }
+
+        L.Control.geocoder(geoCoderOptions1).addTo(map1);
+
+        map1.on('click', onMapClick1);
 
 
     </script>

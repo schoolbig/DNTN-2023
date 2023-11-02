@@ -68,7 +68,7 @@
                                                                     <a href="#" class="dropdown-toggle btn btn-icon btn-trigger" data-bs-toggle="dropdown"><em class="icon ni ni-more-h"></em></a>
                                                                     <div class="dropdown-menu dropdown-menu-end">
                                                                         <ul class="link-list-opt no-bdr">
-                                                                            <li><a href="category_detail.php?id=<?php echo $row['MaNamHoc'] ?>"><em class="icon ni ni-focus"></em><span>Xem chi tiết</span></a></li>
+                                                                            <li><a href="year-detail.php?id=<?php echo $row['MaNamHoc'] ?>"><em class="icon ni ni-focus"></em><span>Xem chi tiết</span></a></li>
                                                                             <li class="divider"></li>
                                                                             <li><a onclick="delete_year(<?php echo $row['MaNamHoc'] ?>)"><em class="icon ni ni-delete"></em><span>Xóa</span></a></li>
 
@@ -166,83 +166,8 @@
         </div>
     </div>
     <!-- content @e -->
-
-
     <script>
-        // $(document).ready(function() {
-        //     // Lắng nghe sự kiện mở modal
-        //     $('#modalForm').on('show.bs.modal', function (event) {
-        //         $('#btn_add').show();
-        //         $('#cate-title').text("Thêm loại món ăn");
-        //         $('#btn_update').hide();
-        //         $('#cate-status').hide();
-        //         $(this).find('input, textarea, select').val('');
-        //     });
-        // });
-        // function view(id) {
-        //     $.ajax({
-        //         type: 'GET',
-        //         url: 'core//' + id,
-        //         dataType: "json",
-        //         success: function (response) {
-        //             console.log(response);
-        //             if (response.error == false) {
-        //                 $('#modalForm').modal('show');
-        //                 $('#cate-title').text("Thông tin loại món ăn");
-        //                 $('#btn_add').hide();
-        //    //                 $('#btn_update').show();
-        //    //                 $('#cate-status').show();
-        //    //                 $('#cate-id').val(response.data.MaLoai);
-        //                 $('#full-name').val(response.data.TenLoai);
-        //                 $('#cate-desc').val(response.data.MoTa);
-        //                 $('#cate-status-op').val(response.data.TrangThai);
-        //             }
-        //             else {
-        //                 alert(response.message)
-        //             }
-        //
-        //         },
-        //         error: function (error) {
-        //             alert('Đã có lỗi xảy ra. Vui lòng thử lại.'); // Hiển thị thông báo lỗi
-        //         }
-        //     });
-        // }
-        // function update_cate() {
-        //     $("#cate-form").validate();            // <- INITIALIZES PLUGIN
-        //     if ($("#cate-form").valid()) {
-        //         event.preventDefault();
-        //         var formData = new FormData($('#cate-form')[0]);
-        //         var id = $('#cate-id').val();
-        //         $.ajax({
-        //             type: 'POST',
-        //             url: '/update_cate_api/' + id,
-        //             data: formData,
-        //             contentType: false,
-        //             processData: false,
-        //             success: function (response) {
-        //                 if (response.error == false) {
-        //                     Swal.fire(
-        //                         'Thành công!',
-        //                         'Loại món ăn đã được cập nhật thành công!',
-        //                         'success',
-        //                     );
-        //                     window.location = "categories"
-        //
-        //                 }
-        //                 else {
-        //                     Swal.fire(
-        //                         'Thất bại!',
-        //                         'Đã có lỗi xảy ra: ' + response.message,
-        //                         'error'
-        //                     )
-        //                 }
-        //             },
-        //             error: function (error) {
-        //                 alert('Đã có lỗi xảy ra. Vui lòng thử lại.'); // Hiển thị thông báo lỗi
-        //             }
-        //         });
-        //     };
-        // }
+
         $("#year-info-form").submit(function(event) {
             $("#year-info-form").validate();            // <- INITIALIZES PLUGIN
             if ($("#year-info-form").valid()) {

@@ -64,7 +64,7 @@
                                                                     <a href="#" class="dropdown-toggle btn btn-icon btn-trigger" data-bs-toggle="dropdown"><em class="icon ni ni-more-h"></em></a>
                                                                     <div class="dropdown-menu dropdown-menu-end">
                                                                         <ul class="link-list-opt no-bdr">
-                                                                            <li><a href="category_detail.php?id=<?php echo $row['MaLoai'] ?>"><em class="icon ni ni-focus"></em><span>Xem chi tiết</span></a></li>
+                                                                            <li><a href="category_detail.php?cate_id=<?php echo $row['MaLoai'] ?>"><em class="icon ni ni-focus"></em><span>Xem chi tiết</span></a></li>
                                                                             <li class="divider"></li>
                                                                             <li><a onclick="delete_category(<?php echo $row['MaLoai'] ?>)"><em class="icon ni ni-delete"></em><span>Xóa</span></a></li>
 
